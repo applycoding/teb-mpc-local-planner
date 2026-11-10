@@ -46,3 +46,12 @@ Browser demo toolchain (devDependencies and WASM compiler, with pinned versions)
 CMake FetchContent is used only to obtain the C/C++ dependencies listed above.
 The Pages bundle is not exclusively Apache-2.0 when OSQP, AMD, nlohmann/json,
 or Emscripten glue is included.
+
+Idea-only references (no code copied)
+-------------------------------------
+See REFERENCES.md for the idea-only references used while designing this
+demo, including teb_local_planner, nav2_costmap_2d, nav2_core,
+nav2_mppi_controller, and PythonRobotics. No source was copied from those
+projects. GPL and LGPL projects named in REFERENCES.md (including
+mpc_local_planner, CasADi, qpOASES, ECOS, and LGPL-licensed Nav2 packages)
+were excluded as code sources and are not dependencies of this repository.
