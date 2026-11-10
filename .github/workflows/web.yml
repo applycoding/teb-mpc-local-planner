@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: Apache-2.0
+name: web
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '26.13.0'
+      - name: Build WASM
+        run: bash scripts/build_wasm.sh
+      - name: Install and build UI
+        working-directory: web
+        run: |
+          npm ci
+          npm run test:unit
+          npx playwright install chromium --with-deps
+          npm run build
+          npm run test:e2e
+      - name: Upload dist
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: web-dist
+          path: web/dist
+      - name: Upload demo screenshot
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: demo-screenshot
+          path: |
+            docs/demo.png
+            web/demo-screenshot.png
+          if-no-files-found: warn

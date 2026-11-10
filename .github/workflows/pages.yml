@@ -1,0 +1,73 @@
+# SPDX-License-Identifier: Apache-2.0
+name: pages
+on:
+  workflow_run:
+    workflows: [core, web]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-24.04
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
+    outputs:
+      sha: ${{ steps.check.outputs.sha }}
+      web_run_id: ${{ steps.check.outputs.web_run_id }}
+    steps:
+      - id: check
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
+        with:
+          script: |
+            const sha = context.payload.workflow_run.head_sha;
+            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: sha,
+              per_page: 50,
+            });
+            const isOk = (name) => data.workflow_runs.some(
+              (w) => w.name === name && w.conclusion === 'success' &&
+                     w.event === 'push' && w.head_branch === 'main',
+            );
+            if (!isOk('core') || !isOk('web')) {
+              core.setFailed(`Missing successful core+web push runs for ${sha}`);
+              return;
+            }
+            const web = data.workflow_runs.find(
+              (w) => w.name === 'web' && w.conclusion === 'success' &&
+                     w.event === 'push' && w.head_branch === 'main',
+            );
+            core.setOutput('sha', sha);
+            core.setOutput('web_run_id', String(web.id));
+
+  deploy:
+    needs: gate
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+        with:
+          name: web-dist
+          path: dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ needs.gate.outputs.web_run_id }}
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@decdde0ac072f6dcbe43649d82d9c635fff5b4e4 # v4.0.4

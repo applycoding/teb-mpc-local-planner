@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 # teb-mpc-local-planner — v1 plan
 
 Revised 2026-11-10 after an independent review and version, URL, license, unicycle, QP, and scenario checks. Outbound license is **Apache-2.0**, not MIT.

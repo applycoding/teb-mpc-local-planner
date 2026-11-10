@@ -1,0 +1,56 @@
+# Build outputs
+/build/
+/out/
+/cmake-build-*/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Node / web
+node_modules/
+web/dist/
+web/node_modules/
+.cache/
+*.tsbuildinfo
+
+# Emscripten
+web/emsdk/
+.emsdk/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Test / coverage
+test-results/
+playwright-report/
+coverage/
+*.gcda
+*.gcno
+
+# Caches
+.ccache/
+.ninja_deps
+.ninja_log
+
+# ROS / colcon
+install/
+log/
+build_ros/
+
+# Misc generated
+*.wasm.map
+.DS_Store
+build-wasm/
+/build-gxx13/

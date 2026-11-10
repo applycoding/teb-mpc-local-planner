@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 # Build tasks — teb-mpc-local-planner
 
 Execute in order. Follow PLAN.md. Deviate only if a pin or test proves a step broken, and record why. License is **Apache-2.0**, not MIT. Commit author and committer are Arpan Bom <applycoding@gmail.com>; no co-author trailers.

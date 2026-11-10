@@ -1,0 +1,29 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TEB + OSQP MPC demo</title>
+    <style>
+      body { font-family: system-ui, sans-serif; background: #0e1812; color: #e8fff2; margin: 1rem; }
+      #c { background: #102018; border: 1px solid #2a4a3a; border-radius: 8px; max-width: 100%; }
+      .row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.75rem; }
+      button, select { font-size: 1rem; padding: 0.35rem 0.75rem; }
+      #metrics { font-family: ui-monospace, monospace; font-size: 0.9rem; }
+    </style>
+  </head>
+  <body>
+    <h1>TEB-style vs MPC (OSQP)</h1>
+    <div class="row">
+      <label>Scenario <select id="scenario"><option value="1">S1</option><option value="2">S2</option><option value="3">S3</option><option value="4">S4</option></select></label>
+      <button id="reset" type="button">Reset</button>
+      <button id="play" type="button">Play</button>
+      <button id="step" type="button">Step ×20</button>
+    </div>
+    <canvas id="c" width="640" height="360"></canvas>
+    <pre id="metrics"></pre>
+    <script src="tml_wasm.js"></script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
